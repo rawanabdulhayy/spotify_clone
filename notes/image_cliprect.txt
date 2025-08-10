@@ -1,0 +1,56 @@
+import 'package:flutter/material.dart';
+
+void main() => runApp(const MyApp());
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Image.asset + ClipRect Demo',
+      home: const ClipRectExample(),
+    );
+  }
+}
+
+class ClipRectExample extends StatelessWidget {
+  const ClipRectExample({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("Image.asset & ClipRect")),
+      body: Center(
+        child: ClipRect(
+          // Controls how the child is aligned within the clip bounds
+          clipBehavior: Clip.hardEdge, // hardEdge | antiAlias | antiAliasWithSaveLayer
+          child: Align(
+            alignment: Alignment.topCenter, // which part to show
+            heightFactor: 0.5, // show top 50% of the image
+            child: Image.asset(
+              'assets/images/sample.png', // path in pubspec.yaml
+
+              // 🔹 Main properties
+              width: 300,
+              height: 300,
+              fit: BoxFit.cover, // cover, contain, fill, fitWidth, fitHeight, none, scaleDown
+              alignment: Alignment.center,
+              repeat: ImageRepeat.noRepeat, // noRepeat, repeat, repeatX, repeatY
+              matchTextDirection: false,
+              gaplessPlayback: true, // avoid flicker when changing image
+
+              // 🔹 Color filter example
+              color: Colors.black.withOpacity(0.3),
+              colorBlendMode: BlendMode.darken,
+
+              // 🔹 For semantic accessibility
+              semanticLabel: 'Sample clipped image',
+              excludeFromSemantics: false,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

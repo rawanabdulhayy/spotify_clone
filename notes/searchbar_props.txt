@@ -1,0 +1,134 @@
+import 'package:flutter/material.dart';
+
+void main() => runApp(const MyApp());
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Full SearchBar Demo',
+      theme: ThemeData(useMaterial3: true),
+      home: const FullSearchBarDemo(),
+    );
+  }
+}
+
+class FullSearchBarDemo extends StatefulWidget {
+  const FullSearchBarDemo({super.key});
+  @override
+  State<FullSearchBarDemo> createState() => _FullSearchBarDemoState();
+}
+
+class _FullSearchBarDemoState extends State<FullSearchBarDemo> {
+  final TextEditingController _controller = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
+  List<String> _items = List.generate(20, (i) => "Item $i");
+  List<String> _filtered = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _filtered = _items;
+  }
+
+  void _filter(String q) {
+    setState(() {
+      _filtered = _items
+          .where((e) => e.toLowerCase().contains(q.toLowerCase()))
+          .toList();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("Full SearchBar Example")),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            SearchBar(
+              // ---- Input Control ----
+              controller: _controller,
+              focusNode: _focusNode,
+              onChanged: _filter,
+              onSubmitted: (value) => debugPrint("Submitted: $value"),
+              onTap: () => debugPrint("Tapped in"),
+              onTapOutside: (_) => debugPrint("Tapped outside"),
+              hintText: "Search here...",
+              keyboardType: TextInputType.text,
+              textInputAction: TextInputAction.search,
+              autofocus: false,
+              enabled: true,
+              maxLines: 1,
+              minLines: 1,
+              expands: false,
+              textCapitalization: TextCapitalization.none,
+
+              // ---- Decorations ----
+              leading: const Icon(Icons.search),
+              trailing: [
+                IconButton(
+                  icon: const Icon(Icons.mic),
+                  tooltip: "Voice Search",
+                  onPressed: () => debugPrint("Mic pressed"),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.clear),
+                  tooltip: "Clear",
+                  onPressed: () {
+                    _controller.clear();
+                    _filter('');
+                  },
+                ),
+              ],
+              hintStyle: MaterialStateProperty.all(
+                const TextStyle(color: Colors.grey, fontSize: 16),
+              ),
+              textStyle: MaterialStateProperty.all(
+                const TextStyle(color: Colors.black, fontSize: 16),
+              ),
+              backgroundColor: MaterialStateProperty.all(
+                Theme.of(context).colorScheme.surface,
+              ),
+              surfaceTintColor: MaterialStateProperty.all(Colors.transparent),
+              shadowColor: MaterialStateProperty.all(Colors.grey.shade400),
+              elevation: MaterialStateProperty.all(3),
+              side: MaterialStateProperty.all(
+                const BorderSide(color: Colors.blue, width: 1),
+              ),
+              shape: MaterialStateProperty.all(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              constraints: const BoxConstraints(
+                minHeight: 48,
+                maxHeight: 56,
+                minWidth: 200,
+              ),
+
+              // ---- Padding & Layout ----
+              padding: MaterialStateProperty.all(
+                const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+              ),
+              // Custom text direction if needed
+              textDirection: TextDirection.ltr,
+
+              // ---- Accessibility ----
+              semanticLabel: "Search through the list",
+            ),
+            const SizedBox(height: 16),
+            Expanded(
+              child: ListView.builder(
+                itemCount: _filtered.length,
+                itemBuilder: (_, i) => ListTile(title: Text(_filtered[i])),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

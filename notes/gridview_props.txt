@@ -1,0 +1,81 @@
+import 'package:flutter/material.dart';
+
+void main() => runApp(const MyApp());
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'GridView.count Demo',
+      theme: ThemeData(useMaterial3: true),
+      home: const GridViewCountDemo(),
+    );
+  }
+}
+
+class GridViewCountDemo extends StatelessWidget {
+  const GridViewCountDemo({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("GridView.count Example")),
+      body: GridView.count(
+        // 🔹 How many items across
+        crossAxisCount: 3,
+
+        // 🔹 Spacing between items
+        mainAxisSpacing: 12, // vertical space
+        crossAxisSpacing: 12, // horizontal space
+
+        // 🔹 Aspect ratio of each item
+        childAspectRatio: 1, // 1 = square, >1 = wider, <1 = taller
+
+        // 🔹 Padding around the grid
+        padding: const EdgeInsets.all(16),
+
+        // 🔹 Scroll direction (default vertical)
+        scrollDirection: Axis.vertical,
+
+        // 🔹 Whether the grid scrolls in reverse
+        reverse: false,
+
+        // 🔹 Always or never scrollable
+        physics: const BouncingScrollPhysics(), // or NeverScrollableScrollPhysics()
+
+        // 🔹 If true, all children are kept in memory
+        addAutomaticKeepAlives: true,
+
+        // 🔹 If true, children are wrapped with repaint boundaries for performance
+        addRepaintBoundaries: true,
+
+        // 🔹 If true, semantic indexes are added for accessibility
+        addSemanticIndexes: true,
+
+        // 🔹 How the scroll view responds to keyboard insets
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+
+        // 🔹 Shrink grid height to fit children (like ListView)
+        shrinkWrap: false,
+
+        // 🔹 Children
+        children: List.generate(
+          30,
+          (index) => Container(
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: Colors.blue[(index % 9 + 1) * 100],
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Text(
+              "Item $index",
+              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
